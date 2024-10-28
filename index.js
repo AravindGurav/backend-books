@@ -8,9 +8,7 @@ const Books = require("./models/books.models")
 app.use(express.json())
 
 
-// app.get("/books", (req, res) => {
-//      res.send(books)
-// } )
+
 async function createBook(newBook) {
      try {
           const book = new Books(newBook)
@@ -47,12 +45,16 @@ async function readAllBooks() {
 }
 
 app.get("/books", async (req, res) => {
-     const books = await readAllBooks()
-     if (books.length != 0) {
+     try {
+       const books = await readAllBooks()
+       if (books.length != 0) {
          res.json(books)
-     } else {
-          res.status(404).json({error: "Books not found"})
-    }
+       } else {
+         res.status(404).json({ error: "Books not found" })
+       }
+     } catch (error) {
+       res.status(500).json({ error: "Failed to get books" })
+     }
 })
 
 
